@@ -260,30 +260,41 @@ EOF
 		chmod +x /etc/rc.local
 	}
 
-	# Auto-resize filesystem one-shot script on first boot
-	apt install -y e2fsprogs
-	cat <<\EOF > /etc/init.d/resize2fs_once
+	# Auto-resize partition and filesystem one-shot script on first boot
+	apt install -y e2fsprogs parted
+	cat <<\EOF > /etc/init.d/growpart_once
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          resize2fs_once
+# Provides:          growpart_once
 # Required-Start:
 # Required-Stop:
 # Default-Start: 2 3 4 5 S
 # Default-Stop:
-# Short-Description: Resize the root filesystem to fill partition
+# Short-Description: Resize the last partition/filesystem to fill device
 # Description:
 ### END INIT INFO
 
 . /lib/lsb/init-functions
 
-ROOT=$(cat /proc/cmdline | sed -e 's/^.*root=//' -e 's/ .*$//')
-
 case "$1" in
   start)
-    log_daemon_msg "Starting resize2fs_once" &&
-    resize2fs $ROOT &&
-    update-rc.d resize2fs_once remove &&
-    rm /etc/init.d/resize2fs_once &&
+    log_daemon_msg "Starting growpart_once"
+    # get root device from mounts
+    ROOT=$(mount | sed -n 's|^/dev/\(.*\) on / .*|\1|p')
+    if [ -n "$ROOT" ]; then
+       # get the device of the partition
+       DEV=$(lsblk -no pkname /dev/$ROOT)
+       # get the fstype of the partition
+       FSTYPE=$(lsblk -no fstype /dev/$ROOT)
+       # get last part number (this is the one we can grow to end of device)
+       LAST_PART_NUM=$(parted /dev/$DEV -ms unit s p | tail -n 1 | cut -f 1 -d:)
+       # resize the partition
+       parted /dev/$DEV "resizepart $LAST_PART_NUM -0"
+       # resize the filesystem to fit the new partition size
+       resize2fs /dev/$ROOT
+    fi
+    update-rc.d growpart_once remove &&
+    rm /etc/init.d/growpart_once &&
     log_end_msg $?
     ;;
   *)
@@ -293,8 +304,8 @@ case "$1" in
 esac
 
 EOF
-	chmod +x /etc/init.d/resize2fs_once
-	systemctl enable resize2fs_once
+	chmod +x /etc/init.d/growpart_once
+	systemctl enable growpart_once
 
 	# Add autoloading of cryptodev and algo modules
 	cat <<EOF > /etc/modules
