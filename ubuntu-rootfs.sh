@@ -531,7 +531,7 @@ function usage {
 usage: $0 <family> <distro>
 
 	family: newport ventana
-	distro: eoan bionic xenial trusty
+	distro: focal eoan bionic xenial trusty
 
 EOF
 
@@ -569,7 +569,7 @@ case "$FAMILY" in
 	*) usage;;
 esac
 case "$DIST" in
-	eoan|bionic|xenial|trusty);;
+	focal|eoan|bionic|xenial|trusty);;
 	*) usage;;
 esac
 
