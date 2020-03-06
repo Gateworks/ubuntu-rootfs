@@ -60,7 +60,7 @@ EOF
 	# Sterling LWB firmware
 	wget http://dev.gateworks.com/sources/480-0079.tar.bz2 \
 		-O /tmp/480-0079.tar.bz2
-	tar -C / -xvf /tmp/480-0079.tar.bz2
+	tar -C / -xf /tmp/480-0079.tar.bz2 --keep-directory-symlink
 }
 
 function newport_config {
@@ -367,7 +367,7 @@ function ventana_kernel {
 
 	# kernel
 	wget -q -c -N $URL/$KERNEL -O $TMP
-	tar -C $outdir -xf $TMP
+	tar -C $outdir -xf $TMP --keep-directory-symlink
 	rm $TMP
 }
 
@@ -381,7 +381,7 @@ function newport_kernel {
 
 	# kernel
 	wget -q -c -N $URL/$KERNEL -O $TMP
-	tar -C $outdir -xf $TMP
+	tar -C $outdir -xf $TMP --keep-directory-symlink
 	rm $TMP
 
 	# create kernel.itb with compressed kernel image
