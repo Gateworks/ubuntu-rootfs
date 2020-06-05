@@ -3,7 +3,20 @@
 # requires debootstrap qemu-user-status binfmt-support coreutils
 #
 
+function gateworks_config {
+	# add systemd system-shutdown hook to use the GSC to power-down
+	cat <<\EOF > /lib/systemd/system-shutdown/gsc-poweroff
+#!/bin/bash
+
+# use GSC to power cycle the system
+echo 2 > /sys/bus/i2c/devices/0-0020/powerdown
+EOF
+	chmod +x /lib/systemd/system-shutdown/gsc-poweroff
+}
+
 function ventana_config {
+	gateworks_config
+
 	# watchdog config for GSC watchdog
 	cat <<EOF > /etc/watchdog.conf
 watchdog-device = /dev/watchdog
@@ -64,20 +77,13 @@ EOF
 }
 
 function newport_config {
+	gateworks_config
+
 	# CPT (crypto) firmware
 	wget http://dev.gateworks.com/images/cpt8x-mc-ae.out \
 		-O /lib/firmware/cpt8x-mc-ae.out
 	wget http://dev.gateworks.com/images/cpt8x-mc-se.out \
 		-O /lib/firmware/cpt8x-mc-se.out
-
-	# add systemd system-shutdown hook to use the GSC to power-down
-	cat <<\EOF > /lib/systemd/system-shutdown/gsc-poweroff
-#!/bin/bash
-
-# use GSC to power cycle the system
-echo 2 > /sys/bus/i2c/devices/0-0020/powerdown
-EOF
-	chmod +x /lib/systemd/system-shutdown/gsc-poweroff
 }
 
 # second stage setup function
@@ -601,6 +607,7 @@ esac
 # export functions and vars to make accessible to chroot env
 #
 export -f second_stage
+export -f gateworks_config
 export -f ventana_config
 export -f newport_config
 export family=$FAMILY
