@@ -458,7 +458,6 @@ function blkdev_image {
 	local TMP=$(mktemp -d)
 	local PARTOFFSET_MB=
 	local SIZEPART_MB=
-	local opts=
 
 	case "$family" in
 		ventana)
@@ -477,13 +476,18 @@ function blkdev_image {
 	truncate -s ${SIZEPART_MB}M $name.$fstype
 	case "$fstype" in
 		ext4)
-			opts=-q -F -O ^metadata_csum -L $volname
+			# remove metadata checksums for newer e2fsprogs
+			# to allow U-Boot to write to ext4
+			if grep -q "metadata_csum" /etc/mke2fs.conf; then
+				mkfs.$fstype -q -F -O ^metadata_csum -L $volname $name.$fstype
+			else
+				mkfs.$fstype -q -F -L $volname $name.$fstype
+			fi
 			;;
 		f2fs)
-			opts=-q -l $volname
+			mkfs.$fstype -q -l $volname $name.$fstype
 			;;
 	esac
-	mkfs.$fstype $opts $name.$fstype
 	mount $name.$fstype ${TMP}
 	cp -rup $rootfs/* ${TMP}
 	umount ${TMP}
