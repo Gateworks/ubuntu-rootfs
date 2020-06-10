@@ -17,15 +17,6 @@ EOF
 function ventana_config {
 	gateworks_config
 
-	# watchdog config for GSC watchdog
-	cat <<EOF > /etc/watchdog.conf
-watchdog-device = /dev/watchdog
-realtime = yes
-priority = 1
-interval = 5
-watchdog-timeout = 30
-EOF
-
 	# use MSI interrupts for ath9k
 	# (not needed if 'pci=nomsi' in cmdline which our bootscript does)
 	echo "options ath9k use_msi=1" > /etc/modprobe.d/ath9k.conf
@@ -42,11 +33,6 @@ ci_hdrc_imx
 usb-storage
 
 EOF
-
-	# blacklist imx watchdog
-	# (not needed for our kernel as we disable it, for other kernels
-	#  they can reconfigure watchdog.conf if needed)
-	#echo "blacklist rtc_snvs" > /etc/modprobe.d/blacklist-rtc.conf
 
 	# Add IMX specific firmware
 	FSL_MIRROR=http://www.freescale.com/lgfiles/NMG/MAD/YOCTO
