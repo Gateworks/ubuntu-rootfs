@@ -472,6 +472,7 @@ function blkdev_image {
 	local TMP=$(mktemp -d)
 	local PARTOFFSET_MB=
 	local SIZEPART_MB=
+	local opts=
 
 	case "$family" in
 		ventana)
@@ -485,10 +486,18 @@ function blkdev_image {
 	SIZEPART_MB=$(($SIZE_MB-$PARTOFFSET_MB))
 	echo "creating ${SIZE_MB}MiB compressed disk image..."
 
-	# create ext4 fs image
+	# create fs image
 	rm -f $name.$fstype
 	truncate -s ${SIZEPART_MB}M $name.$fstype
-	mkfs.$fstype -q -F -L $volname $name.$fstype
+	case "$fstype" in
+		ext4)
+			opts=-q -F -O ^metadata_csum -L $volname
+			;;
+		f2fs)
+			opts=-q -l $volname
+			;;
+	esac
+	mkfs.$fstype $opts $name.$fstype
 	mount $name.$fstype ${TMP}
 	cp -rup $rootfs/* ${TMP}
 	umount ${TMP}
