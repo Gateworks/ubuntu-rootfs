@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # requires debootstrap qemu-user-status binfmt-support coreutils u-boot-tools
+#          sfdisk
 #
 
 function gateworks_config {
@@ -388,6 +389,31 @@ function newport_kernel {
 	rm $TMP
 }
 
+# extract kernel and bootscript
+# $1=output-dir
+function venice_kernel {
+	local outdir=$1
+	local TMP=$(mktemp)
+	local URL=http://dev.gateworks.com/venice/kernel
+	local KERNEL=linux-venice.tar.xz
+
+	# kernel
+	wget -q -c -N $URL/$KERNEL -O $TMP
+	tar -C $outdir -xf $TMP --keep-directory-symlink
+
+	# create kernel.itb with compressed kernel image
+	mv $outdir/boot/Image $TMP
+	gzip -f $TMP
+	mkimage -f auto -A arm64 -O linux -T kernel -C gzip \
+		-a 40200000 -e 40200000 \
+		-n "Ubuntu" -d ${TMP}.gz $outdir/boot/kernel.itb
+
+	# create bootscript
+	wget https://github.com/Gateworks/bsp-venice/raw/master/boot.scr -O $TMP
+	mkimage -A arm64 -T script -C none -d $TMP $outdir/boot/boot.scr
+	rm $TMP
+}
+
 # create NAND UBI image of rootfs+kernel
 # $1=rootfsdir
 # $2=large|normal
@@ -455,7 +481,7 @@ function blkdev_image {
 		ventana)
 			PARTOFFSET_MB=1 # offset for first partition
 			;;
-		newport)
+		newport|venice)
 			PARTOFFSET_MB=16 # offset for first partition
 			;;
 	esac
@@ -510,6 +536,14 @@ function blkdev_image {
 			(cd $TMP; wget -q -c -N http://dev.gateworks.com/newport/boot_firmware/firmware-newport.img)
 			dd if=$TMP/firmware-newport.img of=$name.img bs=1M oflag=sync status=none
 			;;
+		venice)
+			SPL_OFFSET_KB=33
+			# create MBR partition table
+			printf "$((PARTOFFSET_MB*2*1024)),,L,*" | sfdisk -uS $name.img
+			# boot firmware
+			(cd $TMP; wget -q -c -N http://dev.gateworks.com/venice/boot_firmware/flash.bin)
+			dd if=$TMP/flash.bin of=$name.img bs=1k seek=$SPL_OFFSET_KB oflag=sync status=none
+			;;
 	esac
 
 	dd if=$name.$fstype of=$name.img bs=1K seek=$((PARTOFFSET_MB*1024))
@@ -527,7 +561,7 @@ function usage {
 	cat <<EOF
 usage: $0 <family> <distro>
 
-	family: newport ventana
+	family: venice newport ventana
 	distro: focal eoan bionic xenial trusty
 
 EOF
@@ -562,7 +596,7 @@ DIST=$2
 # check CMDLINE env
 case "$FAMILY" in
 	ventana) ARCH=armhf;;
-	newport) ARCH=arm64;;
+	newport|venice) ARCH=arm64;;
 	*) usage;;
 esac
 case "$DIST" in
@@ -576,6 +610,7 @@ required qemu-arm-static qemu-user-static
 required chroot coreutils
 required tar
 required mkimage
+required sfdisk
 
 #name=${DIST}-${ARCH}
 name=${DIST}-${FAMILY}
