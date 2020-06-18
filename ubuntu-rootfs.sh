@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# requires debootstrap qemu-user-status binfmt-support coreutils
+# requires debootstrap qemu-user-status binfmt-support coreutils u-boot-tools
 #
 
 function gateworks_config {
@@ -374,26 +374,18 @@ function newport_kernel {
 	# kernel
 	wget -q -c -N $URL/$KERNEL -O $TMP
 	tar -C $outdir -xf $TMP --keep-directory-symlink
-	rm $TMP
 
 	# create kernel.itb with compressed kernel image
-	TMP=$(mktemp -d)
-	mv $outdir/boot/Image $TMP/vmlinux
-	(cd $TMP/; \
-	gzip vmlinux;
-	wget https://raw.githubusercontent.com/Gateworks/bsp-newport/sdk-10.1.1.0-newport/mkits.sh; \
-	chmod +x mkits.sh; \
-	./mkits.sh -o kernel.its -k vmlinux.gz -C gzip -v "Ubuntu"; \
-	mkimage -f kernel.its kernel.itb; \
-	)
+	mv $outdir/boot/Image $TMP
+	gzip -f $TMP
+	mkimage -f auto -A arm64 -O linux -T kernel -C gzip \
+		-a 20080000 -e 20080000 \
+		-n "Ubuntu" -d ${TMP}.gz $outdir/boot/kernel.itb
+
 	# create bootscript
-	(cd $TMP/; \
-	wget https://raw.githubusercontent.com/Gateworks/bsp-newport/sdk-10.1.1.0-newport/ubuntu.scr; \
-	mkimage -A arm64 -T script -C none -d ubuntu.scr newport.scr
-	)
-	cp $TMP/kernel.itb $outdir/boot/
-	cp $TMP/newport.scr $outdir/boot/
-	rm -rf $TMP
+	wget https://github.com/Gateworks/bsp-newport/raw/sdk-10.1.1.0-newport/ubuntu.scr -O $TMP
+	mkimage -A arm64 -T script -C none -d ${TMP} $outdir/boot/newport.scr
+	rm $TMP
 }
 
 # create NAND UBI image of rootfs+kernel
@@ -583,6 +575,7 @@ required debootstrap
 required qemu-arm-static qemu-user-static
 required chroot coreutils
 required tar
+required mkimage
 
 #name=${DIST}-${ARCH}
 name=${DIST}-${FAMILY}
