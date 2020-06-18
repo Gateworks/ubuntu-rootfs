@@ -356,7 +356,7 @@ function ventana_kernel {
 	local outdir=$1
 	local TMP=$(mktemp)
 	local URL=http://dev.gateworks.com/ventana/images
-	local KERNEL=gateworks-linux-4.20.tar.xz
+	local KERNEL=linux-ventana.tar.xz
 
 	# kernel
 	wget -q -c -N $URL/$KERNEL -O $TMP
