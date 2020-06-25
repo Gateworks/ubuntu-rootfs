@@ -6,6 +6,6 @@ archives and bootable disk images.
 
 usage: ubuntu-rootfs.sh <family> <distro>
 
-        family: newport ventana
-        distro: eoan bionic xenial trusty
+        family: venice newport ventana
+        distro: focal eoan bionic xenial trusty
 
