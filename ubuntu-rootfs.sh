@@ -23,6 +23,7 @@ function ventana_config {
 	echo "options ath9k use_msi=1" > /etc/modprobe.d/ath9k.conf
 
 	# initramfs config
+	[ -d /etc/initramfs-tools/ ] && {
 	cat <<EOF >> /etc/initramfs-tools/modules
 # for NAND/ubi
 gpmi_nand
@@ -34,6 +35,7 @@ ci_hdrc_imx
 usb-storage
 
 EOF
+	}
 
 	# Add IMX specific firmware
 	FSL_MIRROR=http://www.freescale.com/lgfiles/NMG/MAD/YOCTO
