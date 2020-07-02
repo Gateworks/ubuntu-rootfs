@@ -662,6 +662,8 @@ export network_gateway=$NETWORK_GATEWAY
 export network_nameservers=$NETWORK_NAMESERVERS
 # additional packages
 export packages=$PACKAGES
+# misc
+export WGET=$WGET
 
 # second stage
 chroot $outdir /bin/bash -c "second_stage"
