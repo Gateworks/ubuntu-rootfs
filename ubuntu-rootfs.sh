@@ -4,6 +4,8 @@
 #          sfdisk
 #
 
+WGET="wget --no-check-certificate -q"
+
 function gateworks_config {
 	# add systemd system-shutdown hook to use the GSC to power-down
 	cat <<\EOF > /lib/systemd/system-shutdown/gsc-poweroff
@@ -42,7 +44,7 @@ EOF
 	FSL_FIRMWARE=8.1.1
 	# (see https://github.com/Freescale/meta-freescale/tree/master/recipes-bsp/firmware-imx for latest version)
 	(cd tmp; \
-	wget ${FSL_MIRROR}/firmware-imx-${FSL_FIRMWARE}.bin; \
+	$WGET ${FSL_MIRROR}/firmware-imx-${FSL_FIRMWARE}.bin; \
 	sh ./firmware-imx-${FSL_FIRMWARE}.bin --auto-accept --force; \
 	)
 	# VPU firmware
@@ -55,12 +57,12 @@ EOF
 	#cp firmware-imx-*/firmware/sdma-imx6q.bin /lib/firmware/imx/sdma
 
 	# media-ctl-setup script
-	wget https://raw.githubusercontent.com/Gateworks/media-ctl-setup/master/media-ctl-setup \
+	$WGET https://raw.githubusercontent.com/Gateworks/media-ctl-setup/master/media-ctl-setup \
 		-O /usr/local/bin/media-ctl-setup
 	chmod +x /usr/local/bin/media-ctl-setup
 
 	# Sterling LWB firmware
-	wget http://dev.gateworks.com/sources/480-0079.tar.bz2 \
+	$WGET http://dev.gateworks.com/sources/480-0079.tar.bz2 \
 		-O /tmp/480-0079.tar.bz2
 	tar -C / -xf /tmp/480-0079.tar.bz2 --keep-directory-symlink
 }
@@ -69,9 +71,9 @@ function newport_config {
 	gateworks_config
 
 	# CPT (crypto) firmware
-	wget http://dev.gateworks.com/images/cpt8x-mc-ae.out \
+	$WGET http://dev.gateworks.com/images/cpt8x-mc-ae.out \
 		-O /lib/firmware/cpt8x-mc-ae.out
-	wget http://dev.gateworks.com/images/cpt8x-mc-se.out \
+	$WGET http://dev.gateworks.com/images/cpt8x-mc-se.out \
 		-O /lib/firmware/cpt8x-mc-se.out
 }
 
@@ -197,7 +199,7 @@ EOF
 	# NOTE - next upgrade of linux-firmware will undo it
 	cp /lib/firmware/ath10k/QCA9984/hw1.0/board-2.bin \
 		/lib/firmware/ath10k/QCA9984/hw1.0/board-2.bin.orig
-	wget https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/ath10k/QCA9984/hw1.0/board-2.bin -O \
+	$WGET https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/ath10k/QCA9984/hw1.0/board-2.bin -O \
 		/lib/firmware/ath10k/QCA9984/hw1.0/board-2.bin
 
 	# mmc utils for setting partconf
@@ -361,7 +363,7 @@ function ventana_kernel {
 	local KERNEL=linux-ventana.tar.xz
 
 	# kernel
-	wget -q -c -N $URL/$KERNEL -O $TMP
+	$WGET $URL/$KERNEL -O $TMP
 	tar -C $outdir -xf $TMP --keep-directory-symlink
 	rm $TMP
 }
@@ -375,7 +377,7 @@ function newport_kernel {
 	local KERNEL=linux-newport.tar.xz
 
 	# kernel
-	wget -q -c -N $URL/$KERNEL -O $TMP
+	$WGET $URL/$KERNEL -O $TMP
 	tar -C $outdir -xf $TMP --keep-directory-symlink
 
 	# create kernel.itb with compressed kernel image
@@ -386,7 +388,7 @@ function newport_kernel {
 		-n "Ubuntu" -d ${TMP}.gz $outdir/boot/kernel.itb
 
 	# create bootscript
-	wget https://github.com/Gateworks/bsp-newport/raw/sdk-10.1.1.0-newport/ubuntu.scr -O $TMP
+	$WGET https://github.com/Gateworks/bsp-newport/raw/sdk-10.1.1.0-newport/ubuntu.scr -O $TMP
 	mkimage -A arm64 -T script -C none -d ${TMP} $outdir/boot/newport.scr
 	rm $TMP
 }
@@ -400,7 +402,7 @@ function venice_kernel {
 	local KERNEL=linux-venice.tar.xz
 
 	# kernel
-	wget -q -c -N $URL/$KERNEL -O $TMP
+	$WGET $URL/$KERNEL -O $TMP
 	tar -C $outdir -xf $TMP --keep-directory-symlink
 
 	# create kernel.itb with compressed kernel image
@@ -411,7 +413,7 @@ function venice_kernel {
 		-n "Ubuntu" -d ${TMP}.gz $outdir/boot/kernel.itb
 
 	# create bootscript
-	wget https://github.com/Gateworks/bsp-venice/raw/master/boot.scr -O $TMP
+	$WGET https://github.com/Gateworks/bsp-venice/raw/master/boot.scr -O $TMP
 	mkimage -A arm64 -T script -C none -d $TMP $outdir/boot/boot.scr
 	rm $TMP
 }
@@ -526,8 +528,8 @@ function blkdev_image {
 			printf "$((PARTOFFSET_MB*2*1024)),,L,*" | sfdisk -uS $name.img
 			# fetch boot firmware
 			(cd $TMP; \
-			wget -q -c -N http://dev.gateworks.com/ventana/images/SPL; \
-			wget -q -c -N http://dev.gateworks.com/ventana/images/u-boot.img; \
+			$WGET http://dev.gateworks.com/ventana/images/SPL; \
+			$WGET http://dev.gateworks.com/ventana/images/u-boot.img; \
 			)
 			dd if=$TMP/SPL of=$name.img bs=1K seek=${SPL_OFFSET_KB} oflag=sync status=none
 			dd if=$TMP/u-boot.img of=$name.img bs=1K seek=${UBOOT_OFFSET_KB} oflag=sync status=none
@@ -535,7 +537,7 @@ function blkdev_image {
 			;;
 		newport)
 			# fetch boot firmware
-			(cd $TMP; wget -q -c -N http://dev.gateworks.com/newport/boot_firmware/firmware-newport.img)
+			(cd $TMP; $WGET http://dev.gateworks.com/newport/boot_firmware/firmware-newport.img)
 			dd if=$TMP/firmware-newport.img of=$name.img bs=1M oflag=sync status=none
 			;;
 		venice)
@@ -543,7 +545,7 @@ function blkdev_image {
 			# create MBR partition table
 			printf "$((PARTOFFSET_MB*2*1024)),,L,*" | sfdisk -uS $name.img
 			# boot firmware
-			(cd $TMP; wget -q -c -N http://dev.gateworks.com/venice/boot_firmware/flash.bin)
+			(cd $TMP; $WGET http://dev.gateworks.com/venice/boot_firmware/flash.bin)
 			dd if=$TMP/flash.bin of=$name.img bs=1k seek=$SPL_OFFSET_KB oflag=sync status=none
 			;;
 	esac
