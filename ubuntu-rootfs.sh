@@ -70,12 +70,6 @@ EOF
 
 function newport_config {
 	gateworks_config
-
-	# CPT (crypto) firmware
-	$WGET http://dev.gateworks.com/images/cpt8x-mc-ae.out \
-		-O /lib/firmware/cpt8x-mc-ae.out
-	$WGET http://dev.gateworks.com/images/cpt8x-mc-se.out \
-		-O /lib/firmware/cpt8x-mc-se.out
 }
 
 # second stage setup function
