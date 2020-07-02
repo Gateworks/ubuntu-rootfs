@@ -616,6 +616,10 @@ required qemu-arm-static qemu-user-static
 required chroot coreutils
 required tar
 required mkimage
+mkimage -h 2>&1 | grep auto >/dev/null || {
+	echo "mkimage v2016.05 with support for '-f auto' required"
+	exit 1
+}
 required sfdisk
 
 #name=${DIST}-${ARCH}
