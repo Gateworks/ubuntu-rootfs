@@ -194,14 +194,6 @@ EOF
 
 	# firmware
 	apt install -y linux-firmware
-	# use updated QCA9984 board-2.bin file from linux.git for ath10k radios
-	# (updates the one provided by Ubuntu linux-firmware package)
-	# still needed as of 20191219
-	# NOTE - next upgrade of linux-firmware will undo it
-	cp /lib/firmware/ath10k/QCA9984/hw1.0/board-2.bin \
-		/lib/firmware/ath10k/QCA9984/hw1.0/board-2.bin.orig
-	$WGET https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/ath10k/QCA9984/hw1.0/board-2.bin -O \
-		/lib/firmware/ath10k/QCA9984/hw1.0/board-2.bin
 
 	# mmc utils for setting partconf
 	apt install -y mmc-utils
