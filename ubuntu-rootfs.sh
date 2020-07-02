@@ -57,6 +57,7 @@ EOF
 	#cp firmware-imx-*/firmware/sdma-imx6q.bin /lib/firmware/imx/sdma
 
 	# media-ctl-setup script
+	mkdir -p /usr/local/bin
 	$WGET https://raw.githubusercontent.com/Gateworks/media-ctl-setup/master/media-ctl-setup \
 		-O /usr/local/bin/media-ctl-setup
 	chmod +x /usr/local/bin/media-ctl-setup
@@ -321,6 +322,7 @@ EOF
 	echo "Gateworks-Ubuntu-$revision $(date -u)" >> /etc/issue
 
 	# Add a terminal resize script
+	mkdir -p /usr/local/bin
 	cat <<\EOF > /usr/local/bin/resize
 #!/bin/sh
 
