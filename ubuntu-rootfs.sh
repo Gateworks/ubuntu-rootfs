@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# requires debootstrap qemu-user-status binfmt-support coreutils u-boot-tools
+# requires debootstrap qemu-user-static binfmt-support coreutils u-boot-tools
 #          sfdisk
 #
 
