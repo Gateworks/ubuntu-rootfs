@@ -63,9 +63,9 @@ EOF
 	chmod +x /usr/local/bin/media-ctl-setup
 
 	# Sterling LWB firmware
-	$WGET http://dev.gateworks.com/sources/480-0079.tar.bz2 \
+	$WGET https://connectivity-staging.s3.us-east-2.amazonaws.com/2020-04/laird-lwb-fcc-firmware-7.0.0.326.tar.bz2 \
 		-O /tmp/480-0079.tar.bz2
-	tar -C / -xf /tmp/480-0079.tar.bz2 --keep-directory-symlink
+	tar -C / -xf /tmp/480-0079.tar.bz2 lib/firmware/brcm --keep-directory-symlink
 }
 
 function newport_config {
