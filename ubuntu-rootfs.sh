@@ -15,6 +15,15 @@ function gateworks_config {
 echo 2 > /sys/bus/i2c/devices/0-0020/powerdown
 EOF
 	chmod +x /lib/systemd/system-shutdown/gsc-poweroff
+
+	# add watchdog conf
+	cat <<\EOF > /etc/watchdog.conf
+watchdog-device = /dev/watchdog
+realtime = yes
+priority = 1
+interval = 5
+watchdog-timeout = 30
+EOF
 }
 
 function ventana_config {
