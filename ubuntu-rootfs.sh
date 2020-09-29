@@ -81,6 +81,15 @@ function newport_config {
 	gateworks_config
 }
 
+function venice_config {
+	gateworks_config
+
+	# Sterling LWB firmware
+	$WGET https://connectivity-staging.s3.us-east-2.amazonaws.com/2020-04/laird-lwb-fcc-firmware-7.0.0.326.tar.bz2 \
+		-O /tmp/480-0079.tar.bz2
+	tar -C / -xf /tmp/480-0079.tar.bz2 lib/firmware/brcm --keep-directory-symlink
+}
+
 # second stage setup function
 # all commands in this function gets executed after chroot
 function second_stage {
@@ -642,6 +651,7 @@ export -f second_stage
 export -f gateworks_config
 export -f ventana_config
 export -f newport_config
+export -f venice_config
 export family=$FAMILY
 export distro=$DIST
 export arch=$ARCH
