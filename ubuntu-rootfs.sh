@@ -703,3 +703,5 @@ awk '{ print $1 }' ${name}.manifest > ${name}.packages
 		mkubi $outdir large
 	}
 }
+
+exit 0
