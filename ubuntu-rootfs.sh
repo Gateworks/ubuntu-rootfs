@@ -121,6 +121,14 @@ EOF
 	apt install -y software-properties-common # add-apt-repository
 	# Gateworks packages
 	add-apt-repository -y ppa:gateworks-software/packages
+	# Prioritize Gateworks ppa packages in all cases
+	cat <<\EOF > /etc/apt/preferences.d/gateworks
+Package: *
+pin: release o=LP-PPA-gateworks-software-packages
+Pin-Priority: 1010
+
+EOF
+
 	# updated modemmanager/libqmi/libmbim
 	add-apt-repository -y ppa:aleksander-m/modemmanager-$distro
 	apt update
