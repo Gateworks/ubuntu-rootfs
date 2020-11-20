@@ -29,6 +29,9 @@ EOF
 function ventana_config {
 	gateworks_config
 
+	# blacklist SVNC RTC driver (we don't use it)
+	echo "blacklist rtc_snvs" > /etc/modprobe.d/blacklist-rtc.conf
+
 	# use MSI interrupts for ath9k
 	# (not needed if 'pci=nomsi' in cmdline which our bootscript does)
 	echo "options ath9k use_msi=1" > /etc/modprobe.d/ath9k.conf
@@ -83,6 +86,9 @@ function newport_config {
 
 function venice_config {
 	gateworks_config
+
+	# blacklist SVNC RTC driver (we don't use it)
+	echo "blacklist rtc_snvs" > /etc/modprobe.d/blacklist-rtc.conf
 
 	# Sterling LWB firmware (BRCM43430)
 	$WGET https://connectivity-staging.s3.us-east-2.amazonaws.com/2020-04/laird-lwb-fcc-firmware-7.0.0.326.tar.bz2 \
