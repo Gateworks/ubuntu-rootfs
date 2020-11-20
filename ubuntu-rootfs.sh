@@ -84,10 +84,36 @@ function newport_config {
 function venice_config {
 	gateworks_config
 
-	# Sterling LWB firmware
+	# Sterling LWB firmware (BRCM43430)
 	$WGET https://connectivity-staging.s3.us-east-2.amazonaws.com/2020-04/laird-lwb-fcc-firmware-7.0.0.326.tar.bz2 \
 		-O /tmp/480-0079.tar.bz2
 	tar -C / -xf /tmp/480-0079.tar.bz2 lib/firmware/brcm --keep-directory-symlink
+	ls /lib/firmware/brcm
+	# make a copy in cypress directory for compatibility with cypress driver
+	mkdir -p /usr/lib/firmware/cypress
+	cp /lib/firmware/brcm/brcmfmac43430-sdio.txt \
+		/usr/lib/firmware/cypress/cyfmac43430-sdio.txt
+	cp /lib/firmware/brcm/brcmfmac43430-sdio.bin \
+		/usr/lib/firmware/cypress/cyfmac43430-sdio.bin
+	cp /lib/firmware/brcm/brcmfmac43430-sdio.clm_blob \
+		/usr/lib/firmware/cypress/cyfmac43430-sdio.clm_blob
+	ls /lib/firmware/cypress
+
+	# muRATA LBEE5HY1MW (BRCM43455)
+	$WGET https://raw.githubusercontent.com/murata-wireless/cyw-fmac-nvram/master/cyfmac43455-sdio.1MW.txt \
+		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.txt
+	$WGET https://raw.githubusercontent.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.bin \
+		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.bin
+	$WGET https://raw.githubusercontent.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.1MW.clm_blob \
+		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob
+	# make a copy in cypress directory for compatibility with cypress driver
+	mkdir -p /usr/lib/firmware/cypress
+	cp /usr/lib/firmware/brcm/brcmfmac43455-sdio.txt \
+		/usr/lib/firmware/cypress/cyfmac43455-sdio.txt
+	cp /usr/lib/firmware/brcm/brcmfmac43455-sdio.bin \
+		/usr/lib/firmware/cypress/cyfmac43455-sdio.bin
+	cp /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob \
+		/usr/lib/firmware/cypress/cyfmac43455-sdio.clm_blob
 }
 
 # second stage setup function
