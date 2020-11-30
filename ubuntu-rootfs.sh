@@ -108,9 +108,9 @@ function venice_config {
 	# muRATA LBEE5HY1MW (BRCM43455)
 	$WGET https://raw.githubusercontent.com/murata-wireless/cyw-fmac-nvram/master/cyfmac43455-sdio.1MW.txt \
 		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.txt
-	$WGET https://raw.githubusercontent.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.bin \
+	$WGET https://github.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.bin \
 		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.bin
-	$WGET https://raw.githubusercontent.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.1MW.clm_blob \
+	$WGET https://github.com/murata-wireless/cyw-fmac-fw/blob/master/cyfmac43455-sdio.1MW.clm_blob \
 		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob
 	# make a copy in cypress directory for compatibility with cypress driver
 	mkdir -p /usr/lib/firmware/cypress
