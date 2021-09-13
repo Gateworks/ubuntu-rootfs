@@ -78,10 +78,24 @@ EOF
 	$WGET https://connectivity-staging.s3.us-east-2.amazonaws.com/2020-04/laird-lwb-fcc-firmware-7.0.0.326.tar.bz2 \
 		-O /tmp/480-0079.tar.bz2
 	tar -C / -xf /tmp/480-0079.tar.bz2 lib/firmware/brcm --keep-directory-symlink
+
+	# U-Boot env tools config
+	cat << EOF > /etc/fw_env.config
+# device  offset size erasesize
+/dev/mtd1 0x0 0x20000 0x40000
+/dev/mtd1 0x80000 0x20000 0x40000
+EOF
 }
 
 function newport_config {
 	gateworks_config
+
+	# U-Boot env tools config
+	cat << EOF > /etc/fw_env.config
+# Device               offset          Env. size
+/dev/mmcblk0           0xff0000        0x8000
+/dev/mmcblk0           0xff8000        0x8000
+EOF
 }
 
 function venice_config {
@@ -120,6 +134,13 @@ function venice_config {
 		/usr/lib/firmware/cypress/cyfmac43455-sdio.bin
 	cp /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob \
 		/usr/lib/firmware/cypress/cyfmac43455-sdio.clm_blob
+
+	# U-Boot env tools config
+	cat << EOF > /etc/fw_env.config
+# Device               offset          Env. size
+/dev/mmcblk0           0xff0000        0x8000
+/dev/mmcblk0           0xff8000        0x8000
+EOF
 }
 
 # second stage setup function
