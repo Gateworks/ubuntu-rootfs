@@ -7,5 +7,5 @@ archives and bootable disk images.
 usage: ubuntu-rootfs.sh <family> <distro>
 
         family: venice newport ventana
-        distro: focal eoan bionic xenial trusty
+        distro: jammy focal eoan bionic xenial trusty
 
