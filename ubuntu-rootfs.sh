@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # requires debootstrap qemu-user-static binfmt-support coreutils u-boot-tools mtd-utils
-#          sfdisk
+#          sfdisk bzip2
 #
 
 WGET="wget --no-check-certificate -q"
@@ -247,7 +247,7 @@ EOF
 	apt install -y can-utils i2c-tools usbutils pciutils
 	apt install -y u-boot-tools
 	apt install -y screen picocom # terminal programs
-	apt install -y vim pico # file editors
+	apt install -y vim nano # file editors
 	apt install -y ethtool iperf iperf3 iputils-ping bridge-utils # net
 	apt install -y dialog less evtest
 	apt install -y bsdmainutils # hexdump
@@ -633,7 +633,7 @@ function usage {
 usage: $0 <family> <distro>
 
 	family: venice newport ventana
-	distro: focal eoan bionic xenial trusty
+	distro: jammy focal eoan bionic xenial trusty
 
 EOF
 
@@ -671,7 +671,7 @@ case "$FAMILY" in
 	*) usage;;
 esac
 case "$DIST" in
-	focal|eoan|bionic|xenial|trusty);;
+	jammy|focal|eoan|bionic|xenial|trusty);;
 	*) usage;;
 esac
 
@@ -686,6 +686,8 @@ mkimage -h 2>&1 | grep auto >/dev/null || {
 	exit 1
 }
 required sfdisk
+required mtd-utils
+required bzip2
 
 #name=${DIST}-${ARCH}
 name=${DIST}-${FAMILY}
