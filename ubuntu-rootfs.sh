@@ -666,8 +666,18 @@ DIST=$2
 
 # check CMDLINE env
 case "$FAMILY" in
-	ventana) ARCH=armhf;;
-	newport|venice) ARCH=arm64;;
+	ventana)
+		required mkfs.ubifs mtd-utils
+		ARCH=armhf
+		;;
+	newport|venice)
+		ARCH=arm64
+		required mkimage u-boot-tools
+		mkimage -h 2>&1 | grep auto >/dev/null || {
+			echo "mkimage v2016.05 with support for '-f auto' required"
+			exit 1
+		}
+		;;
 	*) usage;;
 esac
 case "$DIST" in
@@ -680,14 +690,9 @@ required debootstrap
 required qemu-arm-static qemu-user-static
 required chroot coreutils
 required tar
-required mkimage
-mkimage -h 2>&1 | grep auto >/dev/null || {
-	echo "mkimage v2016.05 with support for '-f auto' required"
-	exit 1
-}
-required sfdisk
-required mtd-utils
+required sfdisk fdisk
 required bzip2
+required xz xz-utils
 
 #name=${DIST}-${ARCH}
 name=${DIST}-${FAMILY}
