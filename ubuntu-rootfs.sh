@@ -768,7 +768,11 @@ awk '{ print $1 }' ${name}.manifest > ${name}.packages
 	${family}_kernel $outdir
 
 	# disk image and ext4 fs
-	blkdev_image $outdir ext4 1536
+	case "$DIST" in
+		jammy) FSSIZE_MB=2048;;
+		*) FSSIZE_MB=1536;;
+	esac
+	blkdev_image $outdir ext4 $FSSIZE_MB
 
 	# ubi filesystems
 	[ "$family" = "ventana" ] && {
