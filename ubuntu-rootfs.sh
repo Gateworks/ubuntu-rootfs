@@ -579,6 +579,11 @@ function blkdev_image {
 	esac
 	mount $name.$fstype ${TMP}
 	cp -rup $rootfs/* ${TMP}
+	[ $? -ne 0 ] && {
+		echo "Error copying rootfs - ${SIZE_MB}MiB too small?"
+		umount ${TMP}
+		return
+	}
 	umount ${TMP}
 
 	# create disk image
