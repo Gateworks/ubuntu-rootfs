@@ -378,6 +378,7 @@ algif_hash
 algif_skcipher
 algif_rng
 algif_aead
+ledtrig_heartbeat
 EOF
 
 	# DHCP timeout
