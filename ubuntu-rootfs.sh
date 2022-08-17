@@ -108,15 +108,6 @@ function venice_config {
 	$WGET https://connectivity-staging.s3.us-east-2.amazonaws.com/2020-04/laird-lwb-fcc-firmware-7.0.0.326.tar.bz2 \
 		-O /tmp/480-0079.tar.bz2
 	tar -C / -xf /tmp/480-0079.tar.bz2 lib/firmware/brcm --keep-directory-symlink
-	ls /lib/firmware/brcm
-	# make a copy in cypress directory for compatibility with cypress driver
-	mkdir -p /usr/lib/firmware/cypress
-	cp /lib/firmware/brcm/brcmfmac43430-sdio.txt \
-		/usr/lib/firmware/cypress/cyfmac43430-sdio.txt
-	cp /lib/firmware/brcm/brcmfmac43430-sdio.bin \
-		/usr/lib/firmware/cypress/cyfmac43430-sdio.bin
-	cp /lib/firmware/brcm/brcmfmac43430-sdio.clm_blob \
-		/usr/lib/firmware/cypress/cyfmac43430-sdio.clm_blob
 
 	# Sterling LWB5+ firmware (CYW4373)
 	$WGET https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-10.4.0.10/laird-lwb5plus-sdio-sa-firmware-10.4.0.10.tar.bz2 \
@@ -130,14 +121,6 @@ function venice_config {
 		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.bin
 	$WGET https://github.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.1MW.clm_blob \
 		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob
-	# make a copy in cypress directory for compatibility with cypress driver
-	mkdir -p /usr/lib/firmware/cypress
-	cp /usr/lib/firmware/brcm/brcmfmac43455-sdio.txt \
-		/usr/lib/firmware/cypress/cyfmac43455-sdio.txt
-	cp /usr/lib/firmware/brcm/brcmfmac43455-sdio.bin \
-		/usr/lib/firmware/cypress/cyfmac43455-sdio.bin
-	cp /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob \
-		/usr/lib/firmware/cypress/cyfmac43455-sdio.clm_blob
 
 	# U-Boot env tools config
 	cat << EOF > /etc/fw_env.config
