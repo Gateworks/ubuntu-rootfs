@@ -117,7 +117,11 @@ function venice_config {
 		/usr/lib/firmware/cypress/cyfmac43430-sdio.bin
 	cp /lib/firmware/brcm/brcmfmac43430-sdio.clm_blob \
 		/usr/lib/firmware/cypress/cyfmac43430-sdio.clm_blob
-	ls /lib/firmware/cypress
+
+	# Sterling LWB5+ firmware (CYW4373)
+	$WGET https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-10.4.0.10/laird-lwb5plus-sdio-sa-firmware-10.4.0.10.tar.bz2 \
+		-O /tmp/firmware-10.4.0.10.tar.bz2
+	tar -C / -xf /tmp/firmware-10.4.0.10.tar.bz2 lib/firmware/brcm --keep-directory-symlink
 
 	# muRATA LBEE5HY1MW (BRCM43455)
 	$WGET https://raw.githubusercontent.com/murata-wireless/cyw-fmac-nvram/master/cyfmac43455-sdio.1MW.txt \
@@ -255,6 +259,7 @@ EOF
 	apt install -y wget
 	apt install -y gpiod
 	apt install -y ftdi-eeprom
+	apt install -y bzip2
 
 	# distro specific packages
 	case "$distro" in
