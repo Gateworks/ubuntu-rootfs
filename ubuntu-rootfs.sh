@@ -243,6 +243,7 @@ EOF
 	apt install -y gpiod
 	apt install -y ftdi-eeprom
 	apt install -y bzip2
+	apt install -y psmisc
 
 	# distro specific packages
 	case "$distro" in
