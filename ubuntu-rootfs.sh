@@ -130,6 +130,17 @@ function venice_config {
 EOF
 }
 
+function malibu_config {
+	gateworks_config
+
+	# U-Boot env tools config
+	cat << EOF > /etc/fw_env.config
+# Device               offset          Env. size
+/dev/mmcblk0boot0      0x3f0000        0x8000
+/dev/mmcblk0boot0      0x3f8000        0x8000
+EOF
+}
+
 # second stage setup function
 # all commands in this function gets executed after chroot
 function second_stage {
@@ -415,7 +426,7 @@ function usage {
 	cat <<EOF
 usage: $0 <family> <distro>
 
-	family: venice newport ventana
+	family: malibu venice newport ventana
 	distro: jammy focal eoan bionic xenial trusty
 
 EOF
@@ -453,7 +464,7 @@ case "$FAMILY" in
 		required mkfs.ubifs mtd-utils
 		ARCH=armhf
 		;;
-	newport|venice)
+	newport|venice|malibu)
 		ARCH=arm64
 		required mkimage u-boot-tools
 		mkimage -h 2>&1 | grep auto >/dev/null || {
@@ -503,6 +514,7 @@ export -f gateworks_config
 export -f ventana_config
 export -f newport_config
 export -f venice_config
+export -f malibu_config
 export family=$FAMILY
 export distro=$DIST
 export arch=$ARCH
