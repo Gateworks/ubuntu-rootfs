@@ -125,8 +125,8 @@ function venice_config {
 	# U-Boot env tools config
 	cat << EOF > /etc/fw_env.config
 # Device               offset          Env. size
-/dev/mmcblk2           0xff0000        0x8000
-/dev/mmcblk2           0xff8000        0x8000
+/dev/mmcblk2boot0      0x3f0000        0x8000
+/dev/mmcblk2boot0      0x3f8000        0x8000
 EOF
 }
 
