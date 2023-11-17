@@ -7,15 +7,6 @@
 WGET="wget --no-check-certificate -q"
 
 function gateworks_config {
-	# add systemd system-shutdown hook to use the GSC to power-down
-	cat <<\EOF > /lib/systemd/system-shutdown/gsc-poweroff
-#!/bin/bash
-
-# use GSC to power cycle the system
-echo 2 > /sys/bus/i2c/devices/0-0020/powerdown
-EOF
-	chmod +x /lib/systemd/system-shutdown/gsc-poweroff
-
 	# add watchdog conf
 	cat <<\EOF > /etc/watchdog.conf
 watchdog-device = /dev/watchdog
@@ -28,6 +19,15 @@ EOF
 
 function ventana_config {
 	gateworks_config
+
+	# add systemd system-shutdown hook to use the GSC to power-down
+	cat <<\EOF > /lib/systemd/system-shutdown/gsc-poweroff
+#!/bin/bash
+
+# use GSC to power cycle the system
+echo 2 > /sys/bus/i2c/devices/0-0020/powerdown
+EOF
+	chmod +x /lib/systemd/system-shutdown/gsc-poweroff
 
 	# blacklist SVNC RTC driver (we don't use it)
 	echo "blacklist rtc_snvs" > /etc/modprobe.d/blacklist-rtc.conf
@@ -89,6 +89,15 @@ EOF
 
 function newport_config {
 	gateworks_config
+
+	# add systemd system-shutdown hook to use the GSC to power-down
+	cat <<\EOF > /lib/systemd/system-shutdown/gsc-poweroff
+#!/bin/bash
+
+# use GSC to power cycle the system
+echo 2 > /sys/bus/i2c/devices/0-0020/powerdown
+EOF
+	chmod +x /lib/systemd/system-shutdown/gsc-poweroff
 
 	# U-Boot env tools config
 	cat << EOF > /etc/fw_env.config
