@@ -431,6 +431,52 @@ EOF
 		\( -name "*.gz" -o -name "*.xz" -o -name "*.log" \) -delete
 }
 
+# create blkdev disk image containing boot firmware + rootfs partition
+# $1 rootfsdir
+# $2 fstype: ext4|f2fs
+# $3 size_mib
+# $4 volname (defaults to 'rootfs' if not provided)
+#
+# creates $name.$fstype and $name.img.gz
+function blkdev_image {
+	local rootfs=$1
+	local fstype=$2
+	local SIZE_MB=$3
+	local volname=${4:-rootfs}
+	local TMP=$(mktemp -d)
+
+	echo "creating ${SIZE_MB}MiB compressed disk image..."
+
+	# create fs image
+	rm -f $name.$fstype
+	truncate -s ${SIZE_MB}M $name.$fstype
+	case "$fstype" in
+		ext4)
+			# remove metadata checksums for newer e2fsprogs
+			# to allow U-Boot to write to ext4
+			if grep -q "metadata_csum" /etc/mke2fs.conf; then
+				mkfs.$fstype -q -F -O ^metadata_csum -L $volname $name.$fstype
+			else
+				mkfs.$fstype -q -F -L $volname $name.$fstype
+			fi
+			;;
+		f2fs)
+			mkfs.$fstype -q -l $volname $name.$fstype
+			;;
+	esac
+	mount $name.$fstype ${TMP}
+	cp -rup $rootfs/* ${TMP}
+	[ $? -ne 0 ] && {
+		echo "Error copying rootfs - ${SIZE_MB}MiB too small?"
+		umount ${TMP}
+		return
+	}
+	umount ${TMP}
+	rm -rf ${TMP}
+
+	xz -f $name.$fstype
+}
+
 function usage {
 	cat <<EOF
 usage: $0 <family> <distro>
@@ -557,6 +603,18 @@ awk '{ print $1 }' ${name}.manifest > ${name}.packages
 [ -n "$SKIP_TAR" ] || {
 	echo "Building rootfs tarball ${outdir}.tar.xz ..."
 	tar --numeric-owner -cJf ${outdir}.tar.xz -C $outdir .
+}
+
+# build disk images
+[ -n "$SKIP_IMAGE" ] || {
+	echo "Building disk/filesystem image..."
+
+	# disk image and ext4 fs
+	case "$DIST" in
+		jammy) FSSIZE_MB=2048;;
+		*) FSSIZE_MB=1536;;
+	esac
+	blkdev_image $outdir ext4 $FSSIZE_MB
 }
 
 exit 0
