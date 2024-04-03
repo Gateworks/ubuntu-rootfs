@@ -110,6 +110,62 @@ EOF
 function venice_config {
 	gateworks_config
 
+	# network device naming service
+	cat << EOF > /lib/systemd/system/netdev-naming.service
+[Unit]
+Description=Network Device Naming
+
+Before=network-pre.target
+Wants=network-pre.target
+
+DefaultDependencies=no
+Requires=local-fs.target
+After=local-fs.target
+
+[Service]
+Type=oneshot
+
+ExecStart=/usr/local/sbin/netdevname
+
+RemainAfterExit=yes
+
+[Install]
+WantedBy=network.target
+EOF
+	cat <<\EOF > /usr/local/sbin/netdevname
+#!/bin/bash
+
+MODEL=$(cat /proc/device-tree/board | tr '\0' '\n')
+case "$MODEL" in
+	GW740*)
+		echo "$0: Adjusting network names for $MODEL"
+		eth0=platform/soc@0/30800000.bus/30bf0000.ethernet
+		eth1=platform/soc@0/30800000.bus/30be0000.ethernet
+		devs="eth0 eth1"
+		;;
+esac
+
+[ "$devs" ] || exit 0
+
+# renumber eth devs to above max eth dev
+max_eth=$(grep -o '^ *eth[0-9]*:' /proc/net/dev | tr -dc '[0-9]\n' | sort -n | tail -1)
+for i in $(seq 0 $max_eth); do
+	ip link set "eth$i" down
+	ip link set "eth$i" name "eth$((++max_eth))"
+done
+
+# renumber eth devs based on the path we defined above
+for i in $devs; do
+	eval path='$'$i
+	devname="$(ls /sys/devices/$path/net | head -1)"
+	echo "$0: $i:$path"
+	ip link set "$devname" down
+	ip link set "$devname" name $i
+done
+EOF
+	chmod +x /usr/local/sbin/netdevname
+	systemctl enable netdev-naming.service
+
 	# blacklist SVNC RTC driver (we don't use it)
 	echo "blacklist rtc_snvs" > /etc/modprobe.d/blacklist-rtc.conf
 
