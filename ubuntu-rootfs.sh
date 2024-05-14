@@ -341,9 +341,11 @@ EOF
 	# watchdog
 	apt install -y watchdog
 
-	# configure dhcp client for 30 sec timeout
+	# configure isc-dhcp-client for 30 sec timeout
 	# (so you don't have to wait the default 5 mins on no network)
-	sed -i 's/^timeout.*/timeout 30;/' /etc/dhcp/dhclient.conf
+	[ -r /etc/dhcp/dhclient.conf ] && {
+		sed -i 's/^timeout.*/timeout 30;/' /etc/dhcp/dhclient.conf
+	}
 
 	# mask wpa_supplicant
 	# (our instructions config it via /etc/network/interfaces per interface)
@@ -445,9 +447,6 @@ algif_rng
 algif_aead
 ledtrig_heartbeat
 EOF
-
-	# DHCP timeout
-	sed -i 's/^timeout.*/timeout 30;/' /etc/dhcp/dhclient.conf
 
 	# Add Gateworks version info to /etc/issue
 	echo "Gateworks-Ubuntu-$revision $(date -u)" >> /etc/issue
