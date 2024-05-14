@@ -643,6 +643,8 @@ export network_nameservers=$NETWORK_NAMESERVERS
 export packages=$PACKAGES
 # misc
 export WGET=$WGET
+# make sure apt is non-interactive
+export DEBIAN_FRONTEND=noninteractive
 
 # second stage
 chroot $outdir /bin/bash -c "second_stage"
