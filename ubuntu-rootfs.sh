@@ -538,7 +538,7 @@ function usage {
 usage: $0 <family> <distro>
 
 	family: malibu venice newport ventana
-	distro: jammy focal eoan bionic xenial trusty
+	distro: noble jammy focal eoan bionic xenial trusty
 
 EOF
 
@@ -586,7 +586,7 @@ case "$FAMILY" in
 	*) usage;;
 esac
 case "$DIST" in
-	jammy|focal|eoan|bionic|xenial|trusty);;
+	noble|jammy|focal|eoan|bionic|xenial|trusty);;
 	*) usage;;
 esac
 
@@ -667,7 +667,7 @@ awk '{ print $1 }' ${name}.manifest > ${name}.packages
 
 	# disk image and ext4 fs
 	case "$DIST" in
-		jammy) FSSIZE_MB=2048;;
+		noble|jammy) FSSIZE_MB=2048;;
 		*) FSSIZE_MB=1536;;
 	esac
 	blkdev_image $outdir ext4 $FSSIZE_MB
