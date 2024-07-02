@@ -74,9 +74,9 @@ EOF
 		-O /usr/local/bin/media-ctl-setup
 	chmod +x /usr/local/bin/media-ctl-setup
 
-	# Sterling LWB firmware
+	# Sterling LWB firmware (BRCM43430)
 	mkdir -p /usr/lib/firmware/updates/brcm
-	$WGET https://connectivity-staging.s3.us-east-2.amazonaws.com/2020-04/laird-lwb-fcc-firmware-7.0.0.326.tar.bz2 \
+	$WGET https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-10.4.0.10/laird-lwb5plus-sdio-sa-firmware-10.4.0.10.tar.bz2 \
 		-O /tmp/firmware.tar.bz2
 	tar --strip-components=2 -C /usr/lib/firmware/updates -xf /tmp/firmware.tar.bz2 lib/firmware/brcm --keep-directory-symlink
 
@@ -172,13 +172,13 @@ EOF
 
 	# Sterling LWB firmware (BRCM43430)
 	mkdir -p /usr/lib/firmware/updates/brcm
-	$WGET https://connectivity-staging.s3.us-east-2.amazonaws.com/2020-04/laird-lwb-fcc-firmware-7.0.0.326.tar.bz2 \
+	$WGET https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-10.4.0.10/laird-lwb5plus-sdio-sa-firmware-10.4.0.10.tar.bz2 \
 		-O /tmp/firmware.tar.bz2
 	tar --strip-components=2 -C /usr/lib/firmware/updates -xf /tmp/firmware.tar.bz2 lib/firmware/brcm --keep-directory-symlink
 
 	# Sterling LWB5+ firmware (CYW4373)
 	mkdir -p /usr/lib/firmware/updates/brcm
-	$WGET https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-10.4.0.10/laird-lwb5plus-sdio-sa-firmware-10.4.0.10.tar.bz2 \
+	$WGET https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-11.171.0.24/laird-lwb5plus-sdio-sa-firmware-11.171.0.24.tar.bz2 \
 		-O /tmp/firmware.tar.bz2
 	tar --strip-components=2 -C /usr/lib/firmware/updates -xf /tmp/firmware.tar.bz2 lib/firmware/brcm --keep-directory-symlink
 
