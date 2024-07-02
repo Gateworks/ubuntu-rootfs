@@ -75,9 +75,10 @@ EOF
 	chmod +x /usr/local/bin/media-ctl-setup
 
 	# Sterling LWB firmware
+	mkdir -p /usr/lib/firmware/updates/brcm
 	$WGET https://connectivity-staging.s3.us-east-2.amazonaws.com/2020-04/laird-lwb-fcc-firmware-7.0.0.326.tar.bz2 \
-		-O /tmp/480-0079.tar.bz2
-	tar -C / -xf /tmp/480-0079.tar.bz2 lib/firmware/brcm --keep-directory-symlink
+		-O /tmp/firmware.tar.bz2
+	tar --strip-components=2 -C /usr/lib/firmware/updates -xf /tmp/firmware.tar.bz2 lib/firmware/brcm --keep-directory-symlink
 
 	# U-Boot env tools config
 	cat << EOF > /etc/fw_env.config
@@ -170,22 +171,25 @@ EOF
 	echo "blacklist rtc_snvs" > /etc/modprobe.d/blacklist-rtc.conf
 
 	# Sterling LWB firmware (BRCM43430)
+	mkdir -p /usr/lib/firmware/updates/brcm
 	$WGET https://connectivity-staging.s3.us-east-2.amazonaws.com/2020-04/laird-lwb-fcc-firmware-7.0.0.326.tar.bz2 \
-		-O /tmp/480-0079.tar.bz2
-	tar -C / -xf /tmp/480-0079.tar.bz2 lib/firmware/brcm --keep-directory-symlink
+		-O /tmp/firmware.tar.bz2
+	tar --strip-components=2 -C /usr/lib/firmware/updates -xf /tmp/firmware.tar.bz2 lib/firmware/brcm --keep-directory-symlink
 
 	# Sterling LWB5+ firmware (CYW4373)
+	mkdir -p /usr/lib/firmware/updates/brcm
 	$WGET https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-10.4.0.10/laird-lwb5plus-sdio-sa-firmware-10.4.0.10.tar.bz2 \
-		-O /tmp/firmware-10.4.0.10.tar.bz2
-	tar -C / -xf /tmp/firmware-10.4.0.10.tar.bz2 lib/firmware/brcm --keep-directory-symlink
+		-O /tmp/firmware.tar.bz2
+	tar --strip-components=2 -C /usr/lib/firmware/updates -xf /tmp/firmware.tar.bz2 lib/firmware/brcm --keep-directory-symlink
 
 	# muRATA LBEE5HY1MW (BRCM43455)
+	mkdir -p /usr/lib/firmware/updates/brcm
 	$WGET https://raw.githubusercontent.com/murata-wireless/cyw-fmac-nvram/master/cyfmac43455-sdio.1MW.txt \
-		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.txt
+		-O /usr/lib/firmware/updates/brcm/brcmfmac43455-sdio.txt
 	$WGET https://github.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.bin \
-		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.bin
+		-O /usr/lib/firmware/brcm/updates/brcmfmac43455-sdio.bin
 	$WGET https://github.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.1MW.clm_blob \
-		-O /usr/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob
+		-O /usr/lib/firmware/brcm/updates/brcmfmac43455-sdio.clm_blob
 
 	# U-Boot env tools config
 	cat << EOF > /etc/fw_env.config
