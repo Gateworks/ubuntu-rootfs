@@ -3,6 +3,7 @@
 # requires debootstrap qemu-user-static binfmt-support coreutils u-boot-tools mtd-utils
 #          sfdisk bzip2
 #
+set -e
 
 WGET="wget --no-check-certificate -q"
 
@@ -213,6 +214,7 @@ EOF
 # second stage setup function
 # all commands in this function gets executed after chroot
 function second_stage {
+	set -e
 	echo "Starting second stage"
 	export LANG=C
 	export FLASH_KERNEL_SKIP=1
