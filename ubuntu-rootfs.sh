@@ -252,9 +252,13 @@ Pin-Priority: 1010
 EOF
 
 	# updated modemmanager/libqmi/libmbim
-	add-apt-repository -y ppa:aleksander-m/modemmanager-$distro
-	apt update
-	apt upgrade -y
+	case "$distro" in
+		focal|bionic|xenial|trusty)
+			add-apt-repository -y ppa:aleksander-m/modemmanager-$distro
+			apt update
+			apt upgrade -y
+			;;
+	esac
 
 	# Set Hostname
 	echo "${distro}-${family}" > /etc/hostname
