@@ -188,9 +188,9 @@ EOF
 	$WGET https://raw.githubusercontent.com/murata-wireless/cyw-fmac-nvram/master/cyfmac43455-sdio.1MW.txt \
 		-O /usr/lib/firmware/updates/brcm/brcmfmac43455-sdio.txt
 	$WGET https://github.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.bin \
-		-O /usr/lib/firmware/brcm/updates/brcmfmac43455-sdio.bin
+		-O /usr/lib/firmware/updates/brcm/brcmfmac43455-sdio.bin
 	$WGET https://github.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.1MW.clm_blob \
-		-O /usr/lib/firmware/brcm/updates/brcmfmac43455-sdio.clm_blob
+		-O /usr/lib/firmware/updates/brcm/brcmfmac43455-sdio.clm_blob
 
 	# U-Boot env tools config
 	cat << EOF > /etc/fw_env.config
