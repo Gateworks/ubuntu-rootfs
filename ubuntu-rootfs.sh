@@ -510,6 +510,8 @@ function blkdev_image {
 	local volname=${4:-rootfs}
 	local TMP=$(mktemp -d)
 
+	# determine minimum size needed if not provided
+	[ -z "$SIZE_MB" ] && SIZE_MB=$(( $(du --total --block-size=1  $rootfs | tail -1 | cut -f1) / 1024 / 1024 * 11 / 10))
 	echo "creating ${SIZE_MB}MiB compressed disk image..."
 
 	# create fs image
@@ -675,13 +677,7 @@ awk '{ print $1 }' ${name}.manifest > ${name}.packages
 # build disk images
 [ -n "$SKIP_IMAGE" ] || {
 	echo "Building disk/filesystem image..."
-
-	# disk image and ext4 fs
-	case "$DIST" in
-		noble|jammy) FSSIZE_MB=2048;;
-		*) FSSIZE_MB=1536;;
-	esac
-	blkdev_image $outdir ext4 $FSSIZE_MB
+	blkdev_image $outdir ext4
 }
 
 exit 0
