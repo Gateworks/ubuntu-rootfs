@@ -80,6 +80,7 @@ EOF
 	$WGET https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-10.4.0.10/laird-lwb5plus-sdio-sa-firmware-10.4.0.10.tar.bz2 \
 		-O /tmp/firmware.tar.bz2
 	tar --strip-components=2 -C /usr/lib/firmware/updates -xf /tmp/firmware.tar.bz2 lib/firmware/brcm --keep-directory-symlink
+	rm /tmp/firmware.tar.bz2
 
 	# U-Boot env tools config
 	cat << EOF > /etc/fw_env.config
@@ -176,12 +177,14 @@ EOF
 	$WGET https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-10.4.0.10/laird-lwb5plus-sdio-sa-firmware-10.4.0.10.tar.bz2 \
 		-O /tmp/firmware.tar.bz2
 	tar --strip-components=2 -C /usr/lib/firmware/updates -xf /tmp/firmware.tar.bz2 lib/firmware/brcm --keep-directory-symlink
+	rm /tmp/firmware.tar.bz2
 
 	# Sterling LWB5+ firmware (CYW4373)
 	mkdir -p /usr/lib/firmware/updates/brcm
 	$WGET https://github.com/LairdCP/Sterling-LWB-and-LWB5-Release-Packages/releases/download/LRD-REL-11.171.0.24/laird-lwb5plus-sdio-sa-firmware-11.171.0.24.tar.bz2 \
 		-O /tmp/firmware.tar.bz2
 	tar --strip-components=2 -C /usr/lib/firmware/updates -xf /tmp/firmware.tar.bz2 lib/firmware/brcm --keep-directory-symlink
+	rm /tmp/firmware.tar.bz2
 
 	# muRATA LBEE5HY1MW (BRCM43455)
 	mkdir -p /usr/lib/firmware/updates/brcm
@@ -491,7 +494,6 @@ EOF
 	# cleanup
 	apt autoremove -y
 	apt-get clean
-	rm -rf /tmp/{*,.*} # /tmp
 	find /var/log -type f \
 		\( -name "*.gz" -o -name "*.xz" -o -name "*.log" \) -delete
 }
