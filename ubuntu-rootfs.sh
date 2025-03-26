@@ -188,9 +188,9 @@ EOF
 
 	# muRATA LBEE5HY1MW (BRCM43455)
 	mkdir -p /usr/lib/firmware/updates/brcm
-	$WGET https://raw.githubusercontent.com/murata-wireless/cyw-fmac-nvram/master/cyfmac43455-sdio.1MW.txt \
+	$WGET https://github.com/murata-wireless/cyw-fmac-nvram/raw/refs/heads/master/cyfmac43455-sdio.1MW.txt \
 		-O /usr/lib/firmware/updates/brcm/brcmfmac43455-sdio.txt
-	$WGET https://github.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.bin \
+	$WGET https://github.com/Infineon/ifx-linux-firmware/raw/refs/tags/release-v6.1.97-2024_1115/firmware/cyfmac43455-sdio.bin \
 		-O /usr/lib/firmware/updates/brcm/brcmfmac43455-sdio.bin
 	$WGET https://github.com/murata-wireless/cyw-fmac-fw/raw/master/cyfmac43455-sdio.1MW.clm_blob \
 		-O /usr/lib/firmware/updates/brcm/brcmfmac43455-sdio.clm_blob
