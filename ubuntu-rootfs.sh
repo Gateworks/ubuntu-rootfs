@@ -312,7 +312,7 @@ EOF
 	fi
 
 	# Wireless
-	apt install -y wpasupplicant iw
+	apt install -y wpasupplicant iw hostapd
 	apt install -y modemmanager libqmi-utils libmbim-utils policykit-1
 	apt install -y bluez brcm-patchram
 
