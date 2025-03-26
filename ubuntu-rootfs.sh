@@ -5,7 +5,7 @@
 #
 set -e
 
-WGET="wget --no-check-certificate -q"
+WGET="wget --no-check-certificate"
 
 function gateworks_config {
 	# add watchdog conf
