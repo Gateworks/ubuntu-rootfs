@@ -345,6 +345,13 @@ EOF
 
 	# firmware
 	apt install -y linux-firmware
+	# get rid of some of the firmware bloat that will never be used on our platforms
+	rm -rf /lib/firmware/marvell/prestera
+	rm -rf /lib/firmware/netronome
+	rm -rf /lib/firmware/mellanox
+	rm -rf /lib/firmware/amdgpu
+	rm -rf /lib/firmware/nvidia
+	rm -rf /lib/firmware/i915
 
 	# mmc utils for setting partconf
 	apt install -y mmc-utils
