@@ -457,7 +457,7 @@ EOF
 	chmod +x /etc/init.d/growpart_once
 	systemctl enable growpart_once
 
-	# Add autoloading of cryptodev and algo modules
+	# Add autoloading of cryptodev, algo and PHY modules
 	cat <<EOF > /etc/modules
 cryptodev
 af_alg
@@ -466,6 +466,7 @@ algif_skcipher
 algif_rng
 algif_aead
 ledtrig_heartbeat
+dp83867
 EOF
 
 	# Add Gateworks version info to /etc/issue
