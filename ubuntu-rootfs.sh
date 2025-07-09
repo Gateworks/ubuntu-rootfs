@@ -336,6 +336,9 @@ EOF
 
 	# distro specific packages
 	case "$distro" in
+		noble)
+			apt install -y util-linux-extra # hwclock
+			;;
 		xenial)
 			;;
 		*)
