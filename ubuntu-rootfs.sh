@@ -287,8 +287,8 @@ EOF
 		echo "$user:$user_passwd" | chpasswd
 	}
 
-	# Networking (we like ifupdown vs netplan)
-	apt install -y net-tools ifupdown
+	# Networking (we like ifupdown+dhclient vs Netplan+systemd-networkd)
+	apt install -y net-tools ifupdown resolvconf
 	echo "Configuring network via ifupdown ($network_if/$network_ip)..."
 	if [ "$network_ip" = "dhcp" ]; then
 		echo "Configuring dhcp network"
